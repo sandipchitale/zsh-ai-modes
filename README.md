@@ -18,9 +18,14 @@ No matter which mode you are in you can use the following keybindings:
 
 # How to use ?
 
-- Download and run `ollama` service
+- [Download](https://ollama.com/download) and start `ollama` service
 - Pull and run `gemma3:4b` model
-- Clone this repo to `~/.zsh/zsh-ai-modes`
+
+```zsh
+ollama pullgemma 3:4b
+```
+
+- Clone [this](https://github.com/sandipchitale/zsh-ai-modes) repo to `~/.zsh/zsh-ai-modes`
 
 ```zsh
 mkdir -p ~/.zsh/ 
