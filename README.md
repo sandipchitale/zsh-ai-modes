@@ -43,11 +43,11 @@ drwxrwxrwt. 86 root          root          2100 Oct 26 21:51 ..
 /tmp/test
 > # type CTRL+N to switch to llm mode
 /tmp/test
-> I am sandip                                                                       LLM [ 🤖: gemma3:4b ]
+> I am sandip                                                  LLM [ 🤖: gemma3:4b ]
 147756-llm: Hello Sandip, it’s nice to meet you! Is there anything I can help you with today?
 > # type CTRL+N again to switch to command generation mode
 /tmp/test
-> list files in /tmp/test folder including hidden files                             Command [ 🤖: gemma3:4b ]
+> list files in /tmp/test folder including hidden files        Command [ 🤖: gemma3:4b ]
 💡 ls -la /tmp/test
 ▶️ y/N/e(dit) ? 
 
