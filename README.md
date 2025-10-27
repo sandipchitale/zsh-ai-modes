@@ -70,7 +70,7 @@ Hello Sandip, it’s nice to meet you! Is there anything I can help you with tod
 /tmp/test
 > list files in /tmp/test folder including hidden files        Command [ 🤖: gemma3:4b ]
                                                                Command [ 🤖: gemma3:4b ]
-  🤖  Working (llm mode) ...
+  🤖  Working (command mode) ...
 💡 ls -la /tmp/test
 ▶️ y/N/e(dit) ? 
 
