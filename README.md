@@ -6,7 +6,7 @@ A simple integration of `zsh` with locally running `gemma3:4b` model, running in
 
 Using <kbd>CTRL+n</kbd> you can cycle between three modes:
 
-- normal shell mode
+- normal shell mode (zsh starts in this mode)
 - llm mode - ask any question in plain language
 - command mode - describe the command to do something and let AI model generate the command to do it
 
