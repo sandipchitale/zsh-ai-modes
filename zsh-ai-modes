@@ -61,7 +61,7 @@ llm_mode() {
   print -s ": ${user_input}"
   print
   if [[ -n ${ZSH_CLAUDE_SHOW_NOTIFICATIONS} ]]; then osascript -e "display notification \"${user_input}\" with title \"zsh-claude: working on...\"" ; fi
-  BUFFER="" ; zle -M "  🤖  Working ..." ; zle -R
+  BUFFER="" ; zle -M "  🤖  Working (llm mode) ..." ; zle -R
   print
   ensure_aicli_server_start
   ai_command_helper_node_server "llm" "${user_input}"
@@ -101,7 +101,7 @@ command_mode() {
   local output_file="/tmp/.zsh-claude$$"
   print
   if [[ -n ${ZSH_CLAUDE_SHOW_NOTIFICATIONS} ]]; then osascript -e "display notification \"${user_input}\" with title \"zsh-claude: working on...\"" ; fi
-  BUFFER="" ; zle -M "  🤖  Working ..." ; zle -R
+  BUFFER="" ; zle -M "  🤖  Working (command mode) ..." ; zle -R
   (ai_command_helper_node_server "command" "${user_input}") > "${output_file}"
   zle -M "" ; zle -R
   local suggested_command
