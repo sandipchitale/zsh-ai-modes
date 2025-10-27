@@ -61,7 +61,7 @@ drwxrwxrwt. 86 root          root          2100 Oct 26 21:51 ..
 -rw-r--r--.  1 sandipchitale sandipchitale    0 Oct 26 21:51 b
 
 /tmp/test
-> # type CTRL+N to switch to llm mode
+> # type CTRL+n to switch to llm mode
 
 /tmp/test
 > I am sandip                                                      LLM [ 🤖: gemma3:4b ]
@@ -70,7 +70,7 @@ drwxrwxrwt. 86 root          root          2100 Oct 26 21:51 ..
 Hello Sandip, it’s nice to meet you! Is there anything I can help you with today?
 
 /tmp/test
-> # type CTRL+N again to switch to command generation mode
+> # type CTRL+n again to switch to command generation mode
 
 /tmp/test
 > list files in /tmp/test folder including hidden files        Command [ 🤖: gemma3:4b ]
@@ -87,7 +87,7 @@ drwxrwxrwt. 88 root          root          2160 Oct 26 21:52 ..
 -rw-r--r--.  1 sandipchitale sandipchitale    0 Oct 26 21:51 b
 
 /tmp/test
-> # type CTRL+N again to revert back to normal shell
+> # type CTRL+n again to revert back to normal shell
 
 /tmp/test
 > 
