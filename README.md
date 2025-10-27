@@ -22,7 +22,7 @@ No matter which mode you are in you can use the following keybindings:
 - Pull and run `gemma3:4b` model
 
 ```zsh
-ollama pullgemma 3:4b
+ollama pull gemma3:4b
 ```
 
 - Clone [this](https://github.com/sandipchitale/zsh-ai-modes) repo to `~/.zsh/zsh-ai-modes`
