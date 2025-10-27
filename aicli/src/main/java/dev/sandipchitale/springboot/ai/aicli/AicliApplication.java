@@ -59,8 +59,6 @@ public class AicliApplication {
             if (request.channel().endsWith("-command")) {
                 assert content != null;
                 content = content.trim().replaceFirst("^`", "").replaceFirst("`$", "");
-            } else {
-                content = String.format("%s: %s", request.channel(), content);
             }
             return content;
         }
