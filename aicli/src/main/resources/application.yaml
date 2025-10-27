@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: aicli
+  main:
+    banner-mode: off
+  ai:
+    ollama:
+      chat:
+        model: "gemma3:4b"
+server:
+  address: 127.0.0.1
+  port: 0
+logging:
+  level:
+    root: off

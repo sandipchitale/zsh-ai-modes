@@ -1,0 +1,9 @@
+POST http://127.0.0.1:42291/
+Accept: text/plain
+Content-Type: application/json
+
+{
+  "channel": "aicli",
+  "prompt": "What is today's date",
+  "ZSH_AI_MODEL": "gemma3:4b"
+}

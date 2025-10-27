@@ -1,0 +1,206 @@
+#!/bin/zsh
+
+startServer() {
+  set +m
+  (nohup java -jar "${0:A:h}/aicli.jar") > /dev/null 2>&1 &
+  # Allow server to start
+  sleep 3
+  set -m
+}
+
+ensure_aicli_server_start() {
+  # start aicli server
+  if [[ -f /tmp/.aicli.port ]]; then
+    local aicli_port
+    aicli_port=$(cat /tmp/.aicli.port)
+    /usr/bin/nc -vnz 127.0.0.1 "${aicli_port}" > /dev/null 2>&1
+    if [[ $? -ne 0 ]]; then
+      # Start server - the port is actually not inuse
+      startServer
+    fi
+  else
+    # Start server
+    startServer
+  fi
+}
+
+# AI Command Integration for ZSH
+ai_command_helper_node_server() {
+  ensure_aicli_server_start
+
+  local aicli_port
+  aicli_port=$(cat /tmp/.aicli.port)
+
+  curl -s -X POST --location "http://127.0.0.1:${aicli_port}" \
+    -H "Content-Type: application/json" \
+    -d "{\"channel\": \"$$-${1}\", \"prompt\": \"${2}\", \"ZSH_AI_MODEL\": \"${ZSH_AI_MODEL:-gemma3:4b}\"}"
+}
+
+llm_mode() {
+  if [[ "${BUFFER}" == "" ]] ; then
+    print
+    zle accept-line
+    return
+  fi
+
+  if [[ "${BUFFER}" == "cls" ]] || [[ "${BUFFER}" == "clear" ]] ; then
+    clear
+    BUFFER=""
+    zle redisplay
+    return
+  fi
+
+  local user_input="${BUFFER}"
+
+  if [[ "${user_input}" =~ ^: ]] ; then
+        # Strip leading : command if present
+        user_input="${user_input##\: }"
+  fi
+
+  # Simple query - add original input to history
+  print -s ": ${user_input}"
+  print
+  if [[ -n ${ZSH_CLAUDE_SHOW_NOTIFICATIONS} ]]; then osascript -e "display notification \"${user_input}\" with title \"zsh-claude: working on...\"" ; fi
+  BUFFER="" ; zle -M "  🤖  Working ..." ; zle -R
+  print
+  ensure_aicli_server_start
+  ai_command_helper_node_server "llm" "${user_input}"
+
+  print
+  print
+
+  BUFFER=""
+  zle redisplay
+}
+
+zle -N llm_mode
+bindkey '^X^L' llm_mode
+
+command_mode() {
+  if [[ "${BUFFER}" == "" ]] ; then
+    print
+    zle accept-line
+    return
+  fi
+
+  if [[ "${BUFFER}" == "cls" ]] || [[ "${BUFFER}" == "clear" ]] ; then
+    clear
+    BUFFER=""
+    zle redisplay
+    return
+  fi
+
+  local user_input="$BUFFER"
+
+  if [[ "${user_input}" =~ ^: ]] ; then
+        # Strip leading : command if present
+        user_input="${user_input##\: }"
+  fi
+
+  # Command generation mode
+  local output_file="/tmp/.zsh-claude$$"
+  print
+  if [[ -n ${ZSH_CLAUDE_SHOW_NOTIFICATIONS} ]]; then osascript -e "display notification \"${user_input}\" with title \"zsh-claude: working on...\"" ; fi
+  BUFFER="" ; zle -M "  🤖  Working ..." ; zle -R
+  (ai_command_helper_node_server "command" "${user_input}") > "${output_file}"
+  zle -M "" ; zle -R
+  local suggested_command
+  suggested_command=$(cat "${output_file}")
+  rm -f "${output_file}"
+
+  if [[ -n "$suggested_command" && "$suggested_command" != "null" ]]; then
+    print
+
+    # Show the suggested command
+    print "💡 \033[1;92m$suggested_command\033[0m"
+
+    # Ask for confirmation
+    print -n "▶️ y/N/e(dit) ? "
+    read -k1 response
+    print ""
+
+    case "$response" in
+    [Yy])
+      # Add original input and generated command to history
+      print -s ": ${user_input}"
+      print -s "$suggested_command"
+      # Show suggested command again
+      print ""
+      print "\033[1;92m$suggested_command\033[0m"
+      # Execute the command
+      # shellcheck disable=SC1090
+      source <(echo "${suggested_command}")
+      sleep 1
+      print ""
+      print ""
+      print ""
+      BUFFER=""
+      zle redisplay
+      ;;
+    [Ee])
+      # Edit the command - NO history addition per requirements
+      BUFFER="$suggested_command"
+      zle redisplay
+      ;;
+    *)
+      # Cancelled - add both original input and generated command to history
+      # so user can recall the generated command later
+      print -s ": ${user_input}"
+      print -s "$suggested_command"
+      print " ❌ Command cancelled"
+      sleep 2
+      BUFFER=""
+      zle redisplay
+      ;;
+    esac
+  else
+    # Failed to generate command - add original input to history
+    print -s ": ${user_input}"
+    print " ❌ Could not generate command suggestion"
+    echo Try again...
+    zle redisplay
+  fi
+}
+
+zle -N command_mode
+bindkey '^X^G' command_mode
+
+adjust_RPROMPT() {
+  RPROMPT=''
+  if [[ -n "${1}" ]]; then
+    # Prepend
+    RPROMPT=" ${1} [ 🤖: ${ZSH_CLAUDE_MODEL:-gemma3:4b} ]"
+  fi
+}
+
+cycle_zsh_ai_modes() {
+  bindkey '^M' | grep -q ' accept-line$'
+  if [[ $? -eq 0 ]]; then
+    adjust_RPROMPT 'LLM'
+    bindkey '^M' llm_mode
+  else
+    bindkey '^M' | grep -q ' llm_mode$'
+    if [[ $? -eq 0 ]]; then
+      adjust_RPROMPT 'Command'
+      bindkey '^M' command_mode
+    else
+      bindkey '^M' | grep -q ' command_mode$'
+      if [[ $? -eq 0 ]]; then
+        adjust_RPROMPT
+        bindkey '^M' accept-line
+      fi
+    fi
+  fi
+  zle reset-prompt
+}
+
+zle -N cycle_zsh_ai_modes
+
+bindkey '^N' cycle_zsh_ai_modes
+
+if [[ -v ZSHAI_SHOW_LOADED ]]; then
+    echo "🤖 AI Command Integration loaded!"
+    echo "Usage: Type natural language command and press CTRL+x CTRL+a"
+    echo "Example: 'list all files in detailed form CTRL+x CTRL+a' -> 'ls -al'"
+fi
+
