@@ -11,7 +11,7 @@ A simple integration of `zsh` with locally running model `gemma3:4b`, running in
 ```zsh
 mkdir -p ~/.zsh/ 
 cd ~/.zsh/
-git clone https://github.com/sandipchitale/zsh-ai-modes
+git clone https://github.com/sandipchitale/zsh-ai-modes.git
 ```
 - Build and copy jar
 
