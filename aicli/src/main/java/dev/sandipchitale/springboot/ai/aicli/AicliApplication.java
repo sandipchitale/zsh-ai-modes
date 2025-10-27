@@ -3,6 +3,10 @@ package dev.sandipchitale.springboot.ai.aicli;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
+import org.springframework.ai.chat.memory.InMemoryChatMemoryRepository;
+import org.springframework.ai.chat.memory.MessageWindowChatMemory;
+import org.springframework.ai.chat.model.ChatModel;
+import org.springframework.ai.ollama.api.OllamaModel;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.context.ServletWebServerInitializedEvent;
@@ -25,8 +29,7 @@ public class AicliApplication {
     @RestController
     public static class AicliController {
         static Map<String, ChatClient> channelsToChatClients = new ConcurrentHashMap<>();
-        private final ChatClient.Builder chatClientBuilder;
-        private final ChatMemory chatMemory;
+        private final ChatModel ollamaModel;
 
         private static final String DEFAULT_SYSTEM_PROMPT = """
                 You are a polite and helpful agent. Respond to user's question using what you know. If you don't know the answer simply say 'Sorry, I dont know.'
@@ -42,9 +45,8 @@ public class AicliApplication {
 
         public record AicliRequest(String channel, String prompt, String ZSH_AI_MODEL) {}
 
-        public AicliController(ChatClient.Builder chatClientBuilder, ChatMemory chatMemory) {
-            this.chatClientBuilder = chatClientBuilder;
-            this.chatMemory = chatMemory;
+        public AicliController(ChatModel ollamaModel) {
+            this.ollamaModel = ollamaModel;
         }
 
         @PostMapping("/")
@@ -57,15 +59,25 @@ public class AicliApplication {
             if (request.channel().endsWith("-command")) {
                 assert content != null;
                 content = content.trim().replaceFirst("^`", "").replaceFirst("`$", "");
+            } else {
+                content = String.format("%s: %s", request.channel(), content);
             }
             return content;
         }
 
         private ChatClient getChatClient(String channel) {
             return channelsToChatClients.computeIfAbsent(channel, (String channelKey) -> {
-                MessageChatMemoryAdvisor messageChatMemoryAdvisor =
-                        MessageChatMemoryAdvisor.builder(chatMemory).conversationId(channelKey).build();
-                return chatClientBuilder
+                // Dedicated ChatMemory to avoid cross talk
+                InMemoryChatMemoryRepository inMemoryChatMemoryRepository = new InMemoryChatMemoryRepository();
+                ChatMemory chatMemory = MessageWindowChatMemory
+                        .builder()
+                        .chatMemoryRepository(inMemoryChatMemoryRepository)
+                        .maxMessages(1000)
+                        .build();
+                MessageChatMemoryAdvisor messageChatMemoryAdvisor = MessageChatMemoryAdvisor
+                        .builder(chatMemory)
+                        .conversationId(channelKey).build();
+                return ChatClient.builder(ollamaModel)
                         .defaultAdvisors(messageChatMemoryAdvisor)
                         .defaultSystem(channelKey.endsWith("-command") ? COMMAND_GENERATOR_SYSTEM_PROMPT : DEFAULT_SYSTEM_PROMPT)
                         .build();
