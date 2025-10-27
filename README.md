@@ -2,6 +2,20 @@
 
 A simple integration of `zsh` with locally running `gemma3:4b` model, running inside `Ollama`.
 
+# Feature
+
+Using <kbd>CTRL+n</kbd> you can cycle between three modes:
+
+- normal shell mode
+- llm mode - ask any question in plain language
+- command mode - describe the command to do something and let AI model generate the command to do it
+
+No matter which mode you are in you can use the following keybindings:
+
+- <kbd>CTRL+x CTRL+z</kbd> - normal mode
+- <kbd>CTRL+x CTRL+l</kbd> - llm mode
+- <kbd>CTRL+x +CTRL+g</kbd> - command generation mode
+
 # How to use ?
 
 - Download and run `ollama` service
@@ -30,7 +44,7 @@ source ~/.zsh/zsh-ai-modes/zsh-ai-modes
 
 # Sample use
 
-- Try different modes using <kbd>CTRL+N</kbd>
+- Try different modes using <kbd>CTRL+n</kbd>
 
 ```text
 /tmp/test

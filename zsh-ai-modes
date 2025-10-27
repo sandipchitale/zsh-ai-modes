@@ -165,6 +165,8 @@ command_mode() {
 zle -N command_mode
 bindkey '^X^G' command_mode
 
+bindkey '^X^Z' accept-line
+
 adjust_RPROMPT() {
   RPROMPT=''
   if [[ -n "${1}" ]]; then
