@@ -2,7 +2,7 @@
 
 startServer() {
   set +m
-  (nohup java -jar "${0:A:h}/aicli.jar") > /dev/null 2>&1 &
+  (nohup java -jar "${${(%):-%x}:A:h}/aicli.jar" ) > /dev/null 2>&1 &
   # Allow server to start
   sleep 3
   set -m
