@@ -1,6 +1,6 @@
 # zsh-ai-modes
 
-A simple integration of `zsh` with locally running model `gemma3:4b`, running inside `Ollama`.
+A simple integration of `zsh` with locally running `gemma3:4b` model, running inside `Ollama`.
 
 # How to use ?
 
