@@ -1,9 +1,13 @@
-POST http://127.0.0.1:38213/
+< {%
+    client.global.set('port', execSync('cat /tmp/.aicli.port').trim());
+%}
+
+POST http://127.0.0.1:{{port}}/
 Accept: text/plain
 Content-Type: application/json
 
 {
   "channel": "aicli",
-  "prompt": "Who are you",
+  "prompt": "Who are you?",
   "ZSH_AI_MODEL": "Llama3.1:8b"
 }
