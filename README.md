@@ -1,6 +1,6 @@
 # zsh-ai-modes
 
-A simple integration of `zsh` with locally running `gemma3:4b` model, running inside `Ollama`.
+A simple integration of `zsh` with locally running `Llama3.1:8b` model, running inside `Ollama`.
 
 # Feature
 
@@ -19,10 +19,10 @@ No matter which mode you are in you can use the following keybindings:
 # How to use ?
 
 - [Download](https://ollama.com/download) and start `ollama` service
-- Pull and run `gemma3:4b` model
+- Pull and run `Llama3.1:8b` model
 
 ```zsh
-ollama pull gemma3:4b
+ollama pull Llama3.1:8b
 ```
 
 - Clone [this](https://github.com/sandipchitale/zsh-ai-modes) repo to `~/.zsh/zsh-ai-modes`
@@ -64,8 +64,8 @@ drwxrwxrwt. 86 root          root          2100 Oct 26 21:51 ..
 > # type CTRL+n to switch to llm mode
 
 /tmp/test
-> I am sandip                                                      LLM [ 🤖: gemma3:4b ]
-                                                                   LLM [ 🤖: gemma3:4b 
+> I am sandip                                                      LLM [ 🤖: Llama3.1:8b ]
+                                                                   LLM [ 🤖: Llama3.1:8b ]
   🤖  Working (llm mode) ...
 Hello Sandip, it’s nice to meet you! Is there anything I can help you with today?
 
@@ -73,8 +73,8 @@ Hello Sandip, it’s nice to meet you! Is there anything I can help you with tod
 > # type CTRL+n again to switch to command generation mode
 
 /tmp/test
-> list files in /tmp/test folder including hidden files        Command [ 🤖: gemma3:4b ]
-                                                               Command [ 🤖: gemma3:4b ]
+> list files in /tmp/test folder including hidden files        Command [ 🤖: Llama3.1:8b ]
+                                                               Command [ 🤖: Llama3.1:8b ]
   🤖  Working (command mode) ...
 💡 ls -la /tmp/test
 ▶️ y/N/e(dit) ? y

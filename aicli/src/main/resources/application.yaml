@@ -6,7 +6,7 @@ spring:
   ai:
     ollama:
       chat:
-        model: "gemma3:4b"
+        model: "Llama3.1:8b"
 server:
   address: 127.0.0.1
   port: 0

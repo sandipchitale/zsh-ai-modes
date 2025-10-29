@@ -33,7 +33,7 @@ ai_command_helper_node_server() {
 
   curl -s -X POST --location "http://127.0.0.1:${aicli_port}" \
     -H "Content-Type: application/json" \
-    -d "{\"channel\": \"$$-${1}\", \"prompt\": \"${2}\", \"ZSH_AI_MODEL\": \"${ZSH_AI_MODEL:-gemma3:4b}\"}"
+    -d "{\"channel\": \"$$-${1}\", \"prompt\": \"${2}\", \"ZSH_AI_MODEL\": \"${ZSH_AI_MODEL:-Llama3.1:8b}\"}"
 }
 
 llm_mode() {
@@ -171,7 +171,7 @@ adjust_RPROMPT() {
   RPROMPT=''
   if [[ -n "${1}" ]]; then
     # Prepend
-    RPROMPT=" ${1} [ 🤖: ${ZSH_CLAUDE_MODEL:-gemma3:4b} ]"
+    RPROMPT=" ${1} [ 🤖: ${ZSH_CLAUDE_MODEL:-Llama3.1:8b} ]"
   fi
 }
 
